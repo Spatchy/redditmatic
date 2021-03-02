@@ -12,7 +12,9 @@
   },
   "author": "Spatchy",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "snoowrap": "^1.22.0"
+  },
   "devDependencies": {
     "eslint": "^7.21.0",
     "eslint-config-google": "^0.14.0"
