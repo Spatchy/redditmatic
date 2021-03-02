@@ -1,0 +1,20 @@
+{
+  "name": "redditmatic",
+  "version": "1.0.0",
+  "description": "A fully autonomous YouTube channel",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Spatchy/redditmatic.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Spatchy",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
