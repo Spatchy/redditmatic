@@ -1,5 +1,6 @@
 import snoowrap from 'snoowrap'
 import fs from 'fs'
+import util from 'util'
 
 const creds = JSON.parse(fs.readFileSync('credentials.json'));
 
@@ -11,10 +12,16 @@ const r = new snoowrap({
   password: creds.reddit['password'],
 });
 
-r.getSubreddit('askreddit').getTop({time: 'day'}).map(post => ({
-  'title': post.title, 
-  'author': post.author.name, 
-  'url': post.url,
-  'id': post.id,
+r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
+  title: post.title, 
+  author: post.author.name, 
+  url: post.url,
+  id: post.id,
+  comments: await post.comments.fetchMore(30, true, false).map((comment) => ({
+    body: comment.body,
+    author: comment.author.name,
+    url: 'https://reddit.com' + comment.permalink,
+    id: comment.id,
+  }))
 }))
-.then(console.log);
+.then((obj) => fs.writeFileSync('tree.json', JSON.stringify(obj, null, 4)));
