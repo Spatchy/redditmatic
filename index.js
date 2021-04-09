@@ -42,15 +42,23 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
 .then((obj) => {
   fs.writeFileSync('tree.json', JSON.stringify(obj, null, 4));
   obj.forEach(element => {
-    const submissionHTML = HTMLParser.parse(fs.readFileSync('./templates/submission.html'));
+    let submissionHTML = HTMLParser.parse(fs.readFileSync('./templates/submission.html'));
     submissionHTML.querySelector('.username').textContent = element.author;
     submissionHTML.querySelector('.date').textContent = element.date;
     submissionHTML.querySelector('.title').textContent = element.title;
-    submissionHTML.querySelector('.url').textContent =element.url;
+    submissionHTML.querySelector('.url').textContent = element.url;
     if (!fs.existsSync('./out/' + element.id)){
       fs.mkdirSync('./out/' + element.id);
     }
     fs.writeFileSync('./out/' + element.id + '/0.html', submissionHTML);
+    element.comments.forEach((comment, i) => {
+      let commentHTML = HTMLParser.parse(fs.readFileSync('./templates/Comment.html'));
+      commentHTML.querySelector('.username').textContent = comment.author;
+      commentHTML.querySelector('.date').textContent = comment.date;
+      commentHTML.querySelector('.content').textContent = comment.body;
+      commentHTML.querySelector('.url').textContent = comment.url;
+      fs.writeFileSync('./out/' + element.id + '/'+ (i+1) + '.html', commentHTML);
+    });
   });
 });
 
