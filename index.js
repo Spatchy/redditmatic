@@ -1,6 +1,7 @@
-import snoowrap from 'snoowrap'
-import fs from 'fs'
-import util from 'util'
+import snoowrap from 'snoowrap';
+import fs from 'fs';
+import util from 'util';
+import HTMLParser from 'node-html-parser'
 
 const creds = JSON.parse(fs.readFileSync('credentials.json'));
 
@@ -38,4 +39,18 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
     date: convertTime(comment.created_utc),
   }))
 }))
-.then((obj) => fs.writeFileSync('tree.json', JSON.stringify(obj, null, 4)));
+.then((obj) => {
+  fs.writeFileSync('tree.json', JSON.stringify(obj, null, 4));
+  obj.forEach(element => {
+    const submissionHTML = HTMLParser.parse(fs.readFileSync('./templates/submission.html'));
+    submissionHTML.querySelector('.username').textContent = element.author;
+    submissionHTML.querySelector('.date').textContent = element.date;
+    submissionHTML.querySelector('.title').textContent = element.title;
+    submissionHTML.querySelector('.url').textContent =element.url;
+    if (!fs.existsSync('./out/' + element.id)){
+      fs.mkdirSync('./out/' + element.id);
+    }
+    fs.writeFileSync('./out/' + element.id + '/0.html', submissionHTML);
+  });
+});
+
