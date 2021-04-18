@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A fully autonomous YouTube channel",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/Spatchy/redditmatic.git"
