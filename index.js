@@ -1,7 +1,8 @@
 import snoowrap from 'snoowrap';
 import fs from 'fs';
 import util from 'util';
-import HTMLParser from 'node-html-parser'
+import HTMLParser from 'node-html-parser';
+import tts from './tts.js';
 
 const creds = JSON.parse(fs.readFileSync('credentials.json'));
 
@@ -51,6 +52,7 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
       fs.mkdirSync('./out/' + element.id);
     }
     fs.writeFileSync('./out/' + element.id + '/0.html', submissionHTML);
+    tts(element.title, './out/' + element.id + '/0.mp3');
     element.comments.forEach((comment, i) => {
       let commentHTML = HTMLParser.parse(fs.readFileSync('./templates/Comment.html'));
       commentHTML.querySelector('.username').textContent = comment.author;
@@ -58,6 +60,7 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
       commentHTML.querySelector('.content').textContent = comment.body;
       commentHTML.querySelector('.url').textContent = comment.url;
       fs.writeFileSync('./out/' + element.id + '/'+ (i+1) + '.html', commentHTML);
+      tts(comment.body, './out/' + element.id + '/'+ (i+1) + '.mp3');
     });
   });
 });
