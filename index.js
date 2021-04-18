@@ -26,7 +26,7 @@ function convertTime (timestamp) {
   ":"+date.getSeconds();
 }
 
-r.getSubreddit('askreddit').getTop({time: 'day'}).map(async (post) => ({
+r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) => ({
   title: post.title, 
   author: post.author.name, 
   url: post.url,
