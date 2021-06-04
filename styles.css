@@ -1,0 +1,33 @@
+body {
+    background-color: #252525;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post {
+    background-color: #151515;
+    color: white;
+    font-family: sans-serif;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 2%;
+    border-radius: 30px;
+    box-shadow: 5px 5px 0px 1px #FF0047;
+}
+
+.floating {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 1%;
+    text-align: right;
+    color: white;
+}
+
+.logo {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 700px;
+}
+
