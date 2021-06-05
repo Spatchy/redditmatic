@@ -16,6 +16,10 @@ body {
     box-shadow: 5px 5px 0px 1px #FF0047;
 }
 
+.wrap {
+    width: 100%;
+}
+
 .floating {
     margin-left: 10%;
     margin-right: 10%;
