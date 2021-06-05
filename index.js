@@ -3,8 +3,12 @@ import fs from 'fs';
 import util from 'util';
 import HTMLParser from 'node-html-parser';
 import tts from './tts.js';
+import renderHTML from './renderHTML.js'
+import path from 'path';
 
 const creds = JSON.parse(fs.readFileSync('credentials.json'));
+
+const startTime = Date.now();
 
 const r = new snoowrap({
   userAgent: creds.reddit['user-agent'],
@@ -52,6 +56,7 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       fs.mkdirSync('./out/' + element.id);
     }
     fs.writeFileSync('./out/' + element.id + '/0.html', submissionHTML);
+    console.log("WRITTEN SUBMISSION HTML");
     tts(element.title, './out/' + element.id + '/0.mp3');
     element.comments.forEach((comment, i) => {
       let commentHTML = HTMLParser.parse(fs.readFileSync('./templates/Comment.html'));
@@ -60,8 +65,19 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       commentHTML.querySelector('.content').textContent = comment.body;
       commentHTML.querySelector('.url').textContent = comment.url;
       fs.writeFileSync('./out/' + element.id + '/'+ (i+1) + '.html', commentHTML);
+      console.log("WRITTEN COMMENT HTML " + (i+1));
       tts(comment.body, './out/' + element.id + '/'+ (i+1) + '.mp3');
     });
   });
+  let promisesArray = [];
+  fs.readdirSync('./out').filter(function (file) {
+    return fs.statSync(path.resolve('./out') + '/' + file).isDirectory();
+  }).forEach(folder => {
+    promisesArray.push(renderHTML('./out/' + folder));
+  });
+    console.log(promisesArray);
+    Promise.all(promisesArray).then((values) => {
+      console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds")
+    })
 });
 
