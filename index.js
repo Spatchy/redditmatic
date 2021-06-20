@@ -5,6 +5,8 @@ import HTMLParser from 'node-html-parser';
 import tts from './tts.js';
 import renderHTML from './renderHTML.js'
 import path from 'path';
+import child_process from 'child_process';
+import process from 'process';
 
 const creds = JSON.parse(fs.readFileSync('credentials.json'));
 
@@ -77,7 +79,27 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
   });
     console.log(promisesArray);
     Promise.all(promisesArray).then((values) => {
-      console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds")
+      console.log(process.platform);
+      var venvExecString = '';
+      if(process.platform === 'win32'){
+        venvExecString = './venv/Scripts/python.exe';
+      } else {  // is Linux
+        venvExecString = './venv/bin/python';
+      }
+      const pyScript = child_process.spawn(path.resolve(venvExecString), ['-u', path.resolve('./render_video.py')]);
+      pyScript.stdout.on('data', (data) => {
+        console.log('render_video.py: ' + data);
+      });
+      pyScript.stdout.on('close', () => {
+        console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
+        if(data.startsWith('Moviepy - Writing video')){
+          console.log(fs.stat('./' + data.split('Moviepy - Writing video ')[1]));
+        }
+      });
+      pyScript.stdout.on('error', () => {
+        console.error("an error occured in the child process");
+        console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
+      });
     })
 });
 
