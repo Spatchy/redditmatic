@@ -66,13 +66,14 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       let commentHTML = HTMLParser.parse(fs.readFileSync('./templates/Comment.html'));
       commentHTML.querySelector('.username').textContent = comment.author;
       commentHTML.querySelector('.date').textContent = comment.date;
-      commentHTML.querySelector('.content').textContent = comment.body;
+      const sanitisedContent = comment.body.replace(/\\+|\*+/g, '');
+      commentHTML.querySelector('.content').textContent = sanitisedContent;
       commentHTML.querySelector('.url').textContent = comment.url;
       const fileIndex = (i + 1) - discardedCount; // make sure numbers aren't skipped in file names
-      if(comment.body.length <= 1400){
+      if(sanitisedContent.length <= 1400){
         fs.writeFileSync('./out/' + element.id + '/'+ fileIndex + '.html', commentHTML);
         console.log("WRITTEN COMMENT HTML " + fileIndex);
-        tts(comment.body, './out/' + element.id + '/'+ fileIndex + '.mp3');
+        tts(sanitisedContent, './out/' + element.id + '/'+ fileIndex + '.mp3');
       } else {
         discardedCount += 1;
       }
