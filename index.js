@@ -60,15 +60,22 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
     fs.writeFileSync('./out/' + element.id + '/0.html', submissionHTML);
     console.log("WRITTEN SUBMISSION HTML");
     tts(element.title, './out/' + element.id + '/0.mp3');
+
+    let discardedCount = 0;
     element.comments.forEach((comment, i) => {
       let commentHTML = HTMLParser.parse(fs.readFileSync('./templates/Comment.html'));
       commentHTML.querySelector('.username').textContent = comment.author;
       commentHTML.querySelector('.date').textContent = comment.date;
       commentHTML.querySelector('.content').textContent = comment.body;
       commentHTML.querySelector('.url').textContent = comment.url;
-      fs.writeFileSync('./out/' + element.id + '/'+ (i+1) + '.html', commentHTML);
-      console.log("WRITTEN COMMENT HTML " + (i+1));
-      tts(comment.body, './out/' + element.id + '/'+ (i+1) + '.mp3');
+      const fileIndex = (i + 1) - discardedCount; // make sure numbers aren't skipped in file names
+      if(comment.body.length <= 1400){
+        fs.writeFileSync('./out/' + element.id + '/'+ fileIndex + '.html', commentHTML);
+        console.log("WRITTEN COMMENT HTML " + fileIndex);
+        tts(comment.body, './out/' + element.id + '/'+ fileIndex + '.mp3');
+      } else {
+        discardedCount += 1;
+      }
     });
   });
   let promisesArray = [];
