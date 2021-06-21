@@ -5,3 +5,5 @@ out/*
 !out/.gitkeep
 redditmatic-006af59d9e4a.json
 /venv
+bgm/*
+!bgm/.gitkeep
