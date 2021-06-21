@@ -26,7 +26,7 @@ frame_buffer = []
 print("assembling video", flush = True)
 for dir in next(os.walk('./out'))[1]:
     if total_duration >= 600:  # If 10 minutes or longer, just stop and move on to rendering
-        print("DURATION LIMIT MET - Video is " + total_duration + " seconds long")
+        print("DURATION LIMIT MET - Video is " + str(total_duration) + " seconds long")
         break
     print("ASSEMBLING " + dir, flush = True)
     makeVideo(frame_buffer, './out/'+dir)
