@@ -97,10 +97,6 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       const pyScript = child_process.spawn(path.resolve(venvExecString), ['-u', path.resolve('./render_video.py')]);
       pyScript.stdout.on('data', (data) => {
         console.log('render_video.py: ' + data);
-        
-        /* if(String(data).includes('Moviepy - Writing video')){
-          // something here to do with progress??
-        } */
       });
       pyScript.stdout.on('close', () => {
         console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
@@ -108,6 +104,9 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       pyScript.stdout.on('error', () => {
         console.error("an error occured in the child process");
         console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
+      });
+      pyScript.stderr.on('data', (data) => {  // tqdm outputs progress to stderr - who's stupid idea was this???
+        console.log(data.toString('utf-8'));
       });
     })
 });
