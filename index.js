@@ -97,12 +97,13 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       const pyScript = child_process.spawn(path.resolve(venvExecString), ['-u', path.resolve('./render_video.py')]);
       pyScript.stdout.on('data', (data) => {
         console.log('render_video.py: ' + data);
+        
+        if(String(data).includes('Moviepy - Writing video')){
+          console.log(fs.stat('./' + data.split('Moviepy - Writing video ')[1]));
+        }
       });
       pyScript.stdout.on('close', () => {
         console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
-        if(data.startsWith('Moviepy - Writing video')){
-          console.log(fs.stat('./' + data.split('Moviepy - Writing video ')[1]));
-        }
       });
       pyScript.stdout.on('error', () => {
         console.error("an error occured in the child process");
