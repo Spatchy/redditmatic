@@ -70,7 +70,7 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       commentHTML.querySelector('.content').textContent = sanitisedContent;
       commentHTML.querySelector('.url').textContent = comment.url;
       const fileIndex = (i + 1) - discardedCount; // make sure numbers aren't skipped in file names
-      if(sanitisedContent.length <= 1400){
+      if((sanitisedContent.length <= 1400) && comment.author != 'AutoModerator'){
         fs.writeFileSync('./out/' + element.id + '/'+ fileIndex + '.html', commentHTML);
         console.log("WRITTEN COMMENT HTML " + fileIndex);
         tts(sanitisedContent, './out/' + element.id + '/'+ fileIndex + '.mp3');
