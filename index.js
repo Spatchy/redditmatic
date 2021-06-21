@@ -98,9 +98,9 @@ r.getSubreddit('askreddit').getTop({time: 'day'}).slice(0, 5).map(async (post) =
       pyScript.stdout.on('data', (data) => {
         console.log('render_video.py: ' + data);
         
-        if(String(data).includes('Moviepy - Writing video')){
-          console.log(fs.stat('./' + data.split('Moviepy - Writing video ')[1]));
-        }
+        /* if(String(data).includes('Moviepy - Writing video')){
+          // something here to do with progress??
+        } */
       });
       pyScript.stdout.on('close', () => {
         console.log("finished in " + ((Date.now() - startTime)/1000) + " seconds");
