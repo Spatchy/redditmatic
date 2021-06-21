@@ -1,6 +1,7 @@
 const acronyms = {
     'I\'m not a lawyer':/ianal/gi,
     'as far as I know':/afaik/gi,
+    'thick':/thicc/gi
 }
 
 export default function process(str){
